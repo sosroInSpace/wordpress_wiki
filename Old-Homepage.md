@@ -1,7 +1,3 @@
-# Wordpress Assets Wiki
-
-Welcome to the OKMG Wordpress Assets. This wiki contains a bunch of information about running Wordpress on AWS, as well as using the assets on this github repo to your advantage.
-
 ## Creating New Wordpress Site
 
 1. Sign in to the [AWS Console](https://aws.amazon.com/)
@@ -10,7 +6,7 @@ Welcome to the OKMG Wordpress Assets. This wiki contains a bunch of information 
 4. Under Step 1 (Choose AMI), go **AWS Marketplace** and select **WordPress Certified by Bitnami**.
 5. Under Step 2 (Choose Instance Type), select **t3.micro** for the instance type.
 6. Under Step 3 (Configure Instance), make sure the default VPC is selected ("VPC 1"). Also **Uncheck T2/T3 Unlimited**.
-7. Under Step 6 (Configure Security Groups), select _"Select an **existing security** group"_ and pick the groups **Wordpress Public** and **Staff SSH**.
+7. Under Step 6 (Configure Security Groups), select _"Select an **existing security** group"_ and pick the groups **WordpressPublic** and **DeveloperSSH**.
 8. All other settings should be automatically filled correctly by Bitnami.
 9. Click **Launch** and select _Create a new key pair_, and give the key pair a name like "company-name".
 10. Download the key, and save it somewhere on your machine. It is suggested to save all keys to **~/.ssh/**
@@ -137,17 +133,20 @@ Note that amazon limits the number of emails to 2000 per day. It is recommended 
 
 1. SSH into the instance with `ssh SOME_NAME`.
 2. run `sudo apt-get install sendmail`
-3. run `sudo nano /etc/hosts` and insert the text `localhost localhost.localdomain` between the line `127.0.0.1 ip-XXX-XXX-XXX-XXX` to make it look like the line below. Use `Ctrl + O` to save, and `Ctrl + X` to quit.
+3. if `sudo apt-get install sendmail` hangs on `SSL certificate` reference the documentation found within these links:
+https://askubuntu.com/questions/937666/ubuntu-16-04-command-line-sendmail-installation-hanged
+https://askubuntu.com/questions/1109982/e-could-not-get-lock-var-lib-dpkg-lock-frontend-open-11-resource-temporari
+4. run `sudo nano /etc/hosts` and insert the text `localhost localhost.localdomain` between the line `127.0.0.1 ip-XXX-XXX-XXX-XXX` to make it look like the line below. Use `Ctrl + O` to save, and `Ctrl + X` to quit.
 
 ```
 127.0.0.1 localhost localhost.localdomain ip-XXX-XXX-XXX-XXX
 ```
 
-4. run `sudo sendmailconfig` and answer 'Y' to everything.
-5. run `nano /opt/bitnami/php/etc/php.ini` and search for the word "sendmail" using `Ctrl + O`.
-6. Uncomment the line `sendmail_path = "env -i /usr/sbin/sendmail -t -i"` by removing the `;` at the start (or add the line if it doesn't exist).
-7. Use `Ctrl + O` to save, and `Ctrl + X` to quit.
-8. Restart bitnami service by running `sudo service bitnami restart`. This may take around 30 seconds.
+5. run `sudo sendmailconfig` and answer 'Y' to everything.
+6. run `nano /opt/bitnami/php/etc/php.ini` and search for the word "sendmail" using `Ctrl + O`.
+7. Uncomment the line `sendmail_path = "env -i /usr/sbin/sendmail -t -i"` by removing the `;` at the start (or add the line if it doesn't exist).
+8. Use `Ctrl + O` to save, and `Ctrl + X` to quit.
+9. Restart bitnami service by running `sudo service bitnami restart`. This may take around 30 seconds.
 
 The emails should be fixed now.
 
